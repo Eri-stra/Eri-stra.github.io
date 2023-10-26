@@ -44,74 +44,105 @@
 			var box = jQuery('.box');	// reference to the HTML .box element
 			var board = jQuery('.board');	// reference to the HTML .board element
 			var boardWidth = board.width();	// the maximum X-Coordinate of the screen
-            var boardHeight = jQuery(window).height(); 
 			var randNum = Math.random() * 100;
 			// Every 50 milliseconds, call the update Function (see below)
 			var interval = setInterval(update, 50);
-
 			// Every time the box is clicked, call the handleBoxClick Function (see below)
 			box.on('click', handleBoxClick);
-
+			board.on('click', handleBoardClick);
 			// moves the Box to a new position on the screen along the X-Axis
 			function moveBoxTo(newPositionX, newPositionY) {
 				box.css("left", newPositionX);
 				box.css('top', newPositionY);
-		    }
+			}
 
 			// changes the text displayed on the
 			function changeBoxText(newText) {
 				box.text(newText);
 			}
-            function getRandomColor(  ) {
-			var colorStr = "rgb(50, 25, 250)";
-             box.css('background-color', colorStr);
-	       }
-           
-		var randomNumberBetween0and10 = Math.random() * 10;
-		function endGame() {
-    clearInterval(interval);
-}
-		   
+			function getRandomColor() {
+				var randomNumberBetween0and10 = Math.random() * 10;
+				var colorStr = "rgb(" + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + ")";
+				console.log(colorStr);
+				box.css('background-color', colorStr,);
+			}
+			function endGame() {
+				clearInterval(interval);
+
+			}
+
+
+
 			//////////////https://eristra-eristragithubio-y0s3hxwf44s.ws-us104.gitpod.io/////////////////////////////////////////////////////
 			/////////////////// YOUR CODE BELOW HERE /////////////////////////
 			//////////////////////////////////////////////////////////////////
 
 			// TODO 2 - Variable declarations 
-            var positionY;
+			var positionY = 0;
 			var positionX = 0;
 			var points = 0;
 			var speed = 10;
-			var speedY;
+			var speedY = 10;
+			var clicks = 3;
+			var boardHeight = jQuery(window).height();
+			var missClicks = 0;
 			/* 
 			This Function will be called 20 times/second. Each time it is called,
 			it should move the Box to a new location. If the box drifts off the screen
 			turn it around! 
 			*/
 			function update() {
-				// Frame 1
 				positionX = positionX + speed;
-				moveBoxTo(positionX);
-                 if (positionX > boardWidth) {
-					speed = speed * -1; 
-				 }
+				moveBoxTo(positionX, positionY);
+				if (positionX > boardWidth) {
+					speed = speed * -1;
+				}
 				if (positionX < 0) {
 					speed = speed * -1;
 				}
-				positionY;
+				positionY = positionY + speedY;
+				if (positionY > boardHeight) {
+					speedY = speedY * -1;
+				}
+				if (positionY < 0) {
+					speedY = speedY * -1;
+				}
 			};
-			
+
 			/* 
 			This Function will be called each time the box is clicked. Each time it is called,
 			it should increase the points total, increase the speed, and move the box to
 			the left side of the screen.
 			*/
 			function handleBoxClick() {
+				// positionX being assigned to zero brings the box back to the left side where the game starts
 				positionX = 0;
-				speed += 3;
+				//speed is increased by 3 each time the box is clicked
+				speed = speed + 3;
+				//points is increased by 1 so that each time the box is clicked 
 				points = points + 1;
+				// the changeBoxText function changes the box text to the number of points that increases each time the box is clicked 
 				changeBoxText(points);
-
+				//the if statment for points % 3 === 0 makes the box change color after being cliked three time but only if the points is holding the same numder as the remainder
+				if (points % 3 === 0) {
+					// getRandomColor function in the if statment is being call by it's name so that after three clicks the box will change color
+					getRandomColor();
+				}
 			};
+
+
+			function handleBoardClick() {
+				// missClick variable should increase by 1 each time the board is clicked by the player
+				missClicks = missClicks + 1;
+				//add an if statement  that checks if missClicks is ===  10
+				if (missClicks === 10) {
+					endGame();
+				}
+			}
+
+
+
+
 		})();
 	</script>
 </body>
